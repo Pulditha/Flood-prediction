@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FloodWatch — Flood Prediction Dashboard</title>
+  <meta name="description" content="Real-time flood prediction and monitoring dashboard with risk assessment, water levels, and weather data." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>🌊</text></svg>" />
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header class="header">
+  <div class="header__logo">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 2C16 2 6 12 6 19a10 10 0 0020 0C26 12 16 2 16 2z"/>
+      <path d="M10 22 Q13 19 16 22 Q19 25 22 22" fill="none" stroke="#1e4d8c" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <div class="header__title">
+      <span>FloodWatch</span>
+      <span>Flood Prediction System</span>
+    </div>
+  </div>
+
+  <div class="header__spacer"></div>
+
+  <nav class="nav" id="main-nav">
+    <a href="#dashboard" class="nav__link active" onclick="setActive(this)">Dashboard</a>
+    <a href="#map"       class="nav__link"         onclick="setActive(this)">Risk Map</a>
+    <a href="#forecast"  class="nav__link"         onclick="setActive(this)">Forecast</a>
+    <a href="#alerts"    class="nav__link"         onclick="setActive(this)">Alerts</a>
+    <a href="#about"     class="nav__link"         onclick="setActive(this)">About</a>
+  </nav>
+
+  <div class="header__datetime">
+    <strong id="clock">--:--:--</strong>
+    <span id="date-display">Loading…</span>
+  </div>
+
+  <button class="header__menu-btn" id="menu-btn" aria-label="Toggle menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+</header>
+
+<!-- ============================================================
+     ALERT BANNER
+     ============================================================ -->
+<div class="alert-banner warn" id="top-alert">
+  <span class="alert-banner__icon">⚠️</span>
+  <span id="top-alert-text">
+    <strong>MODERATE FLOOD WATCH:</strong> River levels rising in Kelani River Basin — Stay alert and monitor updates.
+  </span>
+  <button class="alert-banner__close" onclick="dismissAlert()" aria-label="Dismiss alert">✕</button>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT
+     ============================================================ -->
+<main class="main" id="dashboard">
+
+  <!-- ── HERO / CURRENT RISK STATUS ──────────────────────── -->
+  <section class="hero" aria-label="Current Flood Risk Status">
+    <div class="wave-bar"></div>
+    <div class="hero__text">
+      <p class="hero__label">Current Risk Assessment</p>
+      <h1 class="hero__title">Flood Prediction<br>Dashboard</h1>
+      <div class="hero__risk-label" id="risk-label">
+        <span>🟡</span>
+        <span id="risk-text">Moderate Risk</span>
+      </div>
+      <div class="hero__meta">
+        <span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Last updated: <span id="last-updated">--:--</span>
+        </span>
+        <span>
+          <span class="live-dot"></span>
+          Live monitoring active
+        </span>
+        <span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Sri Lanka — Multiple Basins
+        </span>
+      </div>
+    </div>
+
+    <div class="hero__gauge-wrap">
+      <svg class="gauge" viewBox="0 0 150 150" aria-label="Risk gauge">
+        <circle class="gauge__bg" cx="75" cy="75" r="58"/>
+        <circle class="gauge__fill" id="gauge-fill" cx="75" cy="75" r="58"/>
+        <text class="gauge__text" x="75" y="72" id="gauge-pct">42%</text>
+        <text class="gauge__sub" x="75" y="90">RISK LEVEL</text>
+      </svg>
+      <p class="hero__gauge-label">Overall Flood<br>Probability</p>
+    </div>
+  </section>
+
+  <!-- ── KEY METRICS ──────────────────────────────────────── -->
+  <section aria-label="Key Metrics" id="metrics">
+    <div class="section-heading">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Key Metrics
+      </h2>
+      <span class="badge badge--info">Real-time</span>
+    </div>
+    <div class="metrics-grid">
+
+      <!-- Rainfall -->
+      <div class="metric-card" data-tooltip="24-hour cumulative rainfall">
+        <div class="metric-card__icon metric-card__icon--blue">🌧️</div>
+        <div class="metric-card__body">
+          <p class="metric-card__label">Rainfall (24h)</p>
+          <p class="metric-card__value"><span id="metric-rainfall">87</span><span class="metric-card__unit"> mm</span></p>
+          <p class="metric-card__trend up" id="trend-rainfall">↑ +12 mm since yesterday</p>
+          <div class="sparkline" id="spark-rainfall"></div>
+        </div>
+      </div>
+
+      <!-- River Level -->
+      <div class="metric-card" data-tooltip="Current river water level">
+        <div class="metric-card__icon metric-card__icon--teal">🌊</div>
+        <div class="metric-card__body">
+          <p class="metric-card__label">River Level</p>
+          <p class="metric-card__value"><span id="metric-level">4.2</span><span class="metric-card__unit"> m</span></p>
+          <p class="metric-card__trend up" id="trend-level">↑ Above normal (+0.8m)</p>
+          <div class="sparkline" id="spark-level"></div>
+        </div>
+      </div>
+
+      <!-- Soil Moisture -->
+      <div class="metric-card" data-tooltip="Average soil saturation level">
+        <div class="metric-card__icon metric-card__icon--amber">🪨</div>
+        <div class="metric-card__body">
+          <p class="metric-card__label">Soil Moisture</p>
+          <p class="metric-card__value"><span id="metric-soil">78</span><span class="metric-card__unit"> %</span></p>
+          <p class="metric-card__trend up" id="trend-soil">↑ Near saturation</p>
+          <div class="sparkline" id="spark-soil"></div>
+        </div>
+      </div>
+
+      <!-- Temperature -->
+      <div class="metric-card" data-tooltip="Current air temperature">
+        <div class="metric-card__icon metric-card__icon--green">🌡️</div>
+        <div class="metric-card__body">
+          <p class="metric-card__label">Temperature</p>
+          <p class="metric-card__value"><span id="metric-temp">26</span><span class="metric-card__unit"> °C</span></p>
+          <p class="metric-card__trend stable" id="trend-temp">→ Stable conditions</p>
+          <div class="sparkline" id="spark-temp"></div>
+        </div>
+      </div>
+
+      <!-- Wind Speed -->
+      <div class="metric-card" data-tooltip="Wind speed and direction">
+        <div class="metric-card__icon metric-card__icon--purple">💨</div>
+        <div class="metric-card__body">
+          <p class="metric-card__label">Wind Speed</p>
+          <p class="metric-card__value"><span id="metric-wind">32</span><span class="metric-card__unit"> km/h</span></p>
+          <p class="metric-card__trend up" id="trend-wind">↑ South-West gusts</p>
+          <div class="sparkline" id="spark-wind"></div>
+        </div>
+      </div>
+
+      <!-- Flood Probability -->
+      <div class="metric-card" data-tooltip="Model-based flood probability for next 24h">
+        <div class="metric-card__icon metric-card__icon--red">📊</div>
+        <div class="metric-card__body">
+          <p class="metric-card__label">Flood Probability</p>
+          <p class="metric-card__value"><span id="metric-prob">42</span><span class="metric-card__unit"> %</span></p>
+          <p class="metric-card__trend up" id="trend-prob">↑ +8% in last 6h</p>
+          <div class="sparkline" id="spark-prob"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── MAP + ACTIVE ALERTS ─────────────────────────────── -->
+  <section class="two-col" id="map" aria-label="Risk Map and Active Alerts">
+
+    <!-- MAP -->
+    <div class="card">
+      <div class="section-heading">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          Flood Risk Map
+        </h2>
+        <span class="badge badge--warn">Updated 5 min ago</span>
+      </div>
+      <div class="map-container">
+        <!-- SVG schematic map of Sri Lanka river basins -->
+        <svg class="map-svg" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
+          <!-- Ocean background -->
+          <rect width="500" height="600" fill="#bae6fd"/>
+
+          <!-- Sri Lanka outline (simplified) -->
+          <path d="M230,60 L270,55 L310,70 L340,100 L355,140 L360,185 L350,240 L330,290 L310,340 L290,390 L270,440 L250,490 L230,530 L210,490 L190,440 L170,390 L150,340 L135,290 L125,240 L120,185 L130,140 L150,100 L185,70 Z"
+                fill="#e8f5e9" stroke="#90caf9" stroke-width="2"/>
+
+          <!-- River Basins (colour-coded) -->
+          <!-- Kelani Basin - High risk -->
+          <ellipse cx="210" cy="200" rx="55" ry="70" fill="#ef4444" opacity="0.55"/>
+          <!-- Kalu Basin - Medium risk -->
+          <ellipse cx="190" cy="310" rx="45" ry="55" fill="#f59e0b" opacity="0.50"/>
+          <!-- Mahaweli Basin - Low risk -->
+          <ellipse cx="270" cy="220" rx="60" ry="75" fill="#22c55e" opacity="0.40"/>
+          <!-- Nilwala Basin - Minimal -->
+          <ellipse cx="230" cy="420" rx="38" ry="45" fill="#3b82f6" opacity="0.45"/>
+          <!-- Deduru Basin - Medium -->
+          <ellipse cx="185" cy="140" rx="40" ry="45" fill="#f59e0b" opacity="0.45"/>
+
+          <!-- Rivers -->
+          <path d="M210,130 Q215,160 208,200 Q200,240 185,270 Q175,290 170,320" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-opacity="0.7" stroke-linecap="round"/>
+          <path d="M270,140 Q265,180 272,225 Q278,270 265,310" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-opacity="0.6" stroke-linecap="round"/>
+          <path d="M230,350 Q225,380 228,415 Q231,450 225,480" fill="none" stroke="#1d4ed8" stroke-width="2" stroke-opacity="0.6" stroke-linecap="round"/>
+
+          <!-- Region labels -->
+          <text x="198" y="196" font-size="10" font-weight="700" fill="#7f1d1d" text-anchor="middle">Kelani</text>
+          <text x="182" y="310" font-size="10" font-weight="700" fill="#78350f" text-anchor="middle">Kalu</text>
+          <text x="272" y="215" font-size="10" font-weight="700" fill="#14532d" text-anchor="middle">Mahaweli</text>
+          <text x="228" y="418" font-size="10" font-weight="700" fill="#1e3a8a" text-anchor="middle">Nilwala</text>
+          <text x="180" y="138" font-size="10" font-weight="700" fill="#78350f" text-anchor="middle">Deduru</text>
+
+          <!-- Warning pin on Kelani -->
+          <circle cx="212" cy="175" r="10" fill="#ef4444"/>
+          <text x="212" y="179" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">!</text>
+
+          <!-- North indicator -->
+          <text x="460" y="50" font-size="12" font-weight="700" fill="#1e4d8c" text-anchor="middle">N</text>
+          <line x1="460" y1="55" x2="460" y2="75" stroke="#1e4d8c" stroke-width="1.5"/>
+          <polygon points="460,55 455,62 465,62" fill="#1e4d8c"/>
+
+          <!-- Scale bar -->
+          <line x1="30" y1="565" x2="130" y2="565" stroke="#1e4d8c" stroke-width="1.5"/>
+          <line x1="30" y1="560" x2="30" y2="570" stroke="#1e4d8c" stroke-width="1.5"/>
+          <line x1="130" y1="560" x2="130" y2="570" stroke="#1e4d8c" stroke-width="1.5"/>
+          <text x="80" y="582" font-size="10" fill="#1e4d8c" text-anchor="middle">100 km</text>
+        </svg>
+
+        <!-- Legend -->
+        <div class="map-legend">
+          <div class="map-legend__item">
+            <div class="map-legend__dot" style="background:#ef4444"></div>
+            <span>High Risk</span>
+          </div>
+          <div class="map-legend__item">
+            <div class="map-legend__dot" style="background:#f59e0b"></div>
+            <span>Moderate Risk</span>
+          </div>
+          <div class="map-legend__item">
+            <div class="map-legend__dot" style="background:#22c55e"></div>
+            <span>Low Risk</span>
+          </div>
+          <div class="map-legend__item">
+            <div class="map-legend__dot" style="background:#3b82f6"></div>
+            <span>Minimal Risk</span>
+          </div>
+        </div>
+
+        <div class="map-info">Sri Lanka River Basins</div>
+      </div>
+    </div>
+
+    <!-- ALERTS PANEL -->
+    <div class="card" id="alerts">
+      <div class="section-heading">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Active Alerts
+        </h2>
+        <span class="badge badge--danger" id="alert-count-badge">4 Active</span>
+      </div>
+      <div class="alerts-list" id="alerts-list">
+        <!-- Dynamically populated by JS -->
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── CHARTS ───────────────────────────────────────────── -->
+  <section aria-label="Historical Charts">
+    <div class="section-heading">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Trend Analysis
+      </h2>
+      <span class="badge badge--info">Last 7 days</span>
+    </div>
+    <div class="charts-grid">
+      <div class="card">
+        <p style="font-size:0.85rem;font-weight:700;color:var(--color-primary);margin-bottom:0.5rem;">🌧 Daily Rainfall (mm)</p>
+        <div class="chart-wrap">
+          <canvas id="rainfallChart" class="chart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <p style="font-size:0.85rem;font-weight:700;color:var(--color-primary);margin-bottom:0.5rem;">🌊 River Water Level (m)</p>
+        <div class="chart-wrap">
+          <canvas id="levelChart" class="chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7-DAY FORECAST ───────────────────────────────────── -->
+  <section class="card" id="forecast" aria-label="7-Day Flood Forecast">
+    <div class="section-heading">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        7-Day Flood Forecast
+      </h2>
+      <span class="badge badge--info">AI-Powered</span>
+    </div>
+    <table class="forecast-table" aria-label="7-day flood forecast table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Rainfall</th>
+          <th>River Level</th>
+          <th>Wind</th>
+          <th>Flood Risk</th>
+          <th>Probability</th>
+        </tr>
+      </thead>
+      <tbody id="forecast-tbody">
+        <!-- Dynamically populated by JS -->
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── STATISTICS ───────────────────────────────────────── -->
+  <section aria-label="Historical Statistics" id="about">
+    <div class="section-heading">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Historical Statistics
+      </h2>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card__icon">🌊</div>
+        <div class="stat-card__value">147</div>
+        <div class="stat-card__label">Flood Events Monitored (2020–2024)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__icon">🎯</div>
+        <div class="stat-card__value">94%</div>
+        <div class="stat-card__label">Model Prediction Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__icon">⏱️</div>
+        <div class="stat-card__value">6h</div>
+        <div class="stat-card__label">Average Early Warning Time</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <span>
+    <span class="footer__brand">🌊 FloodWatch</span>
+    &nbsp;— Flood Prediction &amp; Monitoring System
+  </span>
+  <span style="color:#64748b; font-size:0.75rem;">
+    Data sources: Meteorological Department &bull; Irrigation Department &bull; NBRO
+  </span>
+  <div class="footer__links">
+    <a href="#dashboard">Dashboard</a>
+    <a href="#alerts">Alerts</a>
+    <a href="#forecast">Forecast</a>
+    <a href="#about">About</a>
+  </div>
+</footer>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
