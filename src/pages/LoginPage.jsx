@@ -15,7 +15,7 @@ function LoginPage() {
   const handleSubmit = (event) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    const analystId = String(formData.get('analyst') || '').trim().toLowerCase()
+    const analystId = String(formData.get('analyst') || '').trim()
     const password = String(formData.get('password') || '').trim()
     const isValidCredential = DEMO_CREDENTIALS.some(
       (credential) => credential.analystId === analystId && credential.password === password,
