@@ -1,32 +1,12 @@
 import { motion } from 'framer-motion'
 import { ShieldCheck } from 'lucide-react'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-const DEMO_CREDENTIALS = [
-  { role: 'Supervisor', analystId: 'supervisor', password: 'supervisor123' },
-  { role: 'Assessor', analystId: 'assessor', password: 'assessor123' },
-]
 
 function LoginPage() {
   const navigate = useNavigate()
-  const [error, setError] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const analystId = String(formData.get('analyst') || '').trim()
-    const password = String(formData.get('password') || '').trim()
-    const isValidCredential = DEMO_CREDENTIALS.some(
-      (credential) => credential.analystId === analystId && credential.password === password,
-    )
-
-    if (!isValidCredential) {
-      setError('Invalid Analyst ID or password. Please use one of the listed demo accounts.')
-      return
-    }
-
-    setError('')
     navigate('/dashboard')
   }
 
@@ -73,16 +53,17 @@ function LoginPage() {
                 className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none ring-cyan-400 transition focus:ring-2"
               />
             </div>
-            {error ? <p className="text-sm text-rose-400">{error}</p> : null}
             <div className="rounded-lg border border-cyan-900/60 bg-cyan-950/30 p-3 text-xs text-cyan-100">
               <p className="font-semibold">Demo login details</p>
               <ul className="mt-2 space-y-1">
-                {DEMO_CREDENTIALS.map((credential) => (
-                  <li key={credential.role}>
-                    {credential.role}: ID <span className="font-medium">{credential.analystId}</span> / Password{' '}
-                    <span className="font-medium">{credential.password}</span>
-                  </li>
-                ))}
+                <li>
+                  Supervisor: ID <span className="font-medium">supervisor</span> / Password{' '}
+                  <span className="font-medium">any value</span>
+                </li>
+                <li>
+                  Assessor: ID <span className="font-medium">assessor</span> / Password{' '}
+                  <span className="font-medium">any value</span>
+                </li>
               </ul>
             </div>
             <button
