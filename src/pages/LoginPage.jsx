@@ -57,14 +57,13 @@ function LoginPage() {
               <p className="font-semibold">Demo login details</p>
               <ul className="mt-2 space-y-1">
                 <li>
-                  Supervisor: ID <span className="font-medium">supervisor</span> / Password{' '}
-                  <span className="font-medium">any value</span>
+                  Supervisor: ID <span className="font-medium">supervisor</span>
                 </li>
                 <li>
-                  Assessor: ID <span className="font-medium">assessor</span> / Password{' '}
-                  <span className="font-medium">any value</span>
+                  Assessor: ID <span className="font-medium">assessor</span>
                 </li>
               </ul>
+              <p className="mt-2 text-cyan-200/80">Prototype demo mode: password entry is currently not validated.</p>
             </div>
             <button
               type="submit"
