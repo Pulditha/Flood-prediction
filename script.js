@@ -11,7 +11,7 @@ const RISK_LEVELS = {
   extreme:  { label: 'Extreme Risk',  color: '#7f1d1d', emoji: '🔴', pct: 90,  gaugeStroke: '#dc2626' },
 };
 
-const CURRENT_RISK = 'moderate'; // change this to test different states
+const DEFAULT_RISK_LEVEL = 'moderate';
 
 // ── Alert Data ─────────────────────────────────────────────
 const ALERTS = [
@@ -407,7 +407,7 @@ function initScrollSpy() {
 // ── Init ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   startClock();
-  updateGauge(CURRENT_RISK);
+  updateGauge(DEFAULT_RISK_LEVEL);
   buildAllSparklines();
   renderAlerts();
   renderForecast();
