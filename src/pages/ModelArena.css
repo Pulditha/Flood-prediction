@@ -1,0 +1,269 @@
+.model-arena {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* Tabs */
+.arena-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  padding: 4px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  width: fit-content;
+}
+
+.arena-tab {
+  padding: 8px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.arena-tab:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.arena-tab.active {
+  background: var(--accent-primary-dim);
+  color: var(--accent-primary);
+}
+
+/* Improvement badges */
+.improvement-badges {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Podium */
+.podium {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xl);
+  margin-top: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.podium-item {
+  flex: 1;
+  max-width: 280px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-base);
+}
+
+.podium-gold {
+  border-color: rgba(0, 212, 170, 0.3);
+  box-shadow: 0 0 20px rgba(0, 212, 170, 0.1);
+}
+
+.podium-gold:hover {
+  border-color: rgba(0, 212, 170, 0.5);
+  box-shadow: 0 0 30px rgba(0, 212, 170, 0.15);
+  transform: translateY(-2px);
+}
+
+.podium-silver:hover, .podium-bronze:hover {
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
+}
+
+.podium-rank {
+  font-size: 2rem;
+}
+
+.podium-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.podium-score {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.podium-r2, .podium-nse {
+  color: var(--text-secondary);
+}
+
+/* Radar + Metrics */
+.arena-middle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.radar-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.radar-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.legend-line {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* Metric Cards */
+.metric-cards-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.metric-card {
+  border-left: 3px solid var(--card-accent, var(--border-subtle));
+}
+
+.metric-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.metric-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md) var(--space-lg);
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metric-label {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+/* Physics Comparison */
+.physics-comparison-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.physics-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.physics-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.physics-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.physics-name {
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.physics-checks-row {
+  display: flex;
+  gap: var(--space-xl);
+  min-width: 200px;
+  justify-content: flex-end;
+}
+
+.physics-check {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.physics-check.yes {
+  background: rgba(0, 212, 170, 0.15);
+  color: var(--accent-primary);
+}
+
+.physics-check.no {
+  background: rgba(239, 68, 68, 0.1);
+  color: rgba(239, 68, 68, 0.5);
+}
+
+.physics-header-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-sm);
+}
+
+.physics-header-labels .physics-checks-row {
+  gap: var(--space-lg);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .arena-middle {
+    grid-template-columns: 1fr;
+  }
+  .podium {
+    flex-direction: column;
+    align-items: center;
+  }
+}
